@@ -1,0 +1,19 @@
+{
+  "name": "Vinted Pro",
+  "short_name": "Vinted Pro",
+  "description": "Assistente completo per venditori Vinted",
+  "start_url": "./vinted-pro-app.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#007882",
+  "lang": "it",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
