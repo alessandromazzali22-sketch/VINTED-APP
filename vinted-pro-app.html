@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#007882">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Vinted Pro">
+<link rel="apple-touch-icon" href="./icon.svg">
+<link rel="manifest" href="./manifest.json">
+<title>Vinted Pro — Assistente Completo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap">
+<style>
+
+:root {
+  --teal: #007882;
+  --teal-light: #E6F4F5;
+  --teal-mid: #009CA6;
+  --amber: #b85c00;
+  --amber-light: #fff4e6;
+  --red: #c0392b;
+  --red-light: #fdf0ee;
+  --purple: #4a3b8c;
+  --purple-light: #f0eeff;
+  --ink: #21272A;
+  --ink2: #596475;
+  --muted: #6B7684;
+  --border: #E8EAEC;
+  --bg: #F5F5F7;
+  --surface: #ffffff;
+  --surface2: #F0F2F4;
+  --green-dot: #22c55e;
+  --font-display: 'DM Sans', system-ui, sans-serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 2px 8px rgba(0,0,0,.06);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── LAYOUT ── */
+.app { display: flex; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 220px;
+  min-height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.sidebar-logo {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo h1 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--teal);
+  letter-spacing: -.3px;
+}
+.sidebar-logo p {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+  font-family: var(--font-body);
+  letter-spacing: .03em;
+}
+.sidebar-nav { padding: 12px 0; flex: 1; }
+.nav-section {
+  padding: 8px 20px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-family: var(--font-body);
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  cursor: pointer;
+  color: var(--ink2);
+  font-size: 13px;
+  font-weight: 400;
+  transition: all .15s;
+  border-left: 2px solid transparent;
+  user-select: none;
+}
+.nav-item:hover { color: var(--teal); background: var(--teal-light); }
+.nav-item.active {
+  color: var(--teal);
+  background: var(--teal-light);
+  border-left-color: var(--teal);
+  font-weight: 500;
+}
+.nav-item .nav-icon { font-size: 15px; width: 18px; text-align: center; opacity: .8; }
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--muted);
+  font-family: var(--font-body);
+}
+
+/* ── MAIN ── */
+.main { flex: 1; min-width: 0; padding: 32px 36px; }
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── COMMON COMPONENTS ── */
+.page-header { margin-bottom: 28px; }
+.page-header h2 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -.5px;
+  line-height: 1.2;
+}
+.page-header p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+}
+.card-sm { padding: 14px 18px; border-radius: var(--radius); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-family: var(--font-body);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+}
+.badge-teal { background: var(--teal-light); color: var(--teal); }
+.badge-amber { background: var(--amber-light); color: var(--amber); }
+.badge-red { background: var(--red-light); color: var(--red); }
+.badge-purple { background: var(--purple-light); color: var(--purple); }
+.badge-gray { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+
+.tip {
+  background: var(--teal-light);
+  border-left: 3px solid var(--teal-mid);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.55;
+  margin: 12px 0;
+}
+.tip-amber { background: var(--amber-light); border-left-color: var(--amber); }
+.tip-red { background: var(--red-light); border-left-color: var(--red); }
+.tip-purple { background: var(--purple-light); border-left-color: var(--purple); }
+
+.divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+/* form elements */
+input[type=text], input[type=number], select, textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--surface);
+  outline: none;
+  transition: border-color .15s;
+}
+input[type=text]:focus, input[type=number]:focus, select:focus, textarea:focus {
+  border-color: var(--teal-mid);
+}
+input[type=range] { width: 100%; accent-color: var(--teal-mid); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink2);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .15s;
+  font-weight: 500;
+}
+.btn:hover { background: var(--surface2); border-color: var(--muted); }
+.btn-primary {
+  background: var(--teal-mid);
+  color: #fff;
+  border-color: var(--teal-mid);
+}
+.btn-primary:hover { background: var(--teal); border-color: var(--teal); }
+
+.stat-card {
+  background: var(--surface2);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+.stat-card .stat-lbl { font-size: 11px; color: var(--muted); margin-bottom: 4px; font-family: var(--font-body); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+.stat-card .stat-val { font-size: 26px; font-weight: 600; color: var(--ink); font-family: var(--font-display); line-height: 1; }
+.stat-card .stat-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.progress-track {
+  width: 100%;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 6px 0;
+}
+.progress-fill { height: 100%; border-radius: 3px; background: var(--teal-mid); transition: width .4s ease; }
+
+.output-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 44px;
+  font-family: var(--font-mono);
+}
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.45;
+}
+.check-item:last-child { border-bottom: none; }
+.check-item input[type=checkbox] { margin-top: 2px; cursor: pointer; accent-color: var(--teal-mid); flex-shrink: 0; }
+.check-item label { cursor: pointer; }
+.check-item.done label { text-decoration: line-through; color: var(--muted); }
+
+/* tab system */
+.tabs { display: flex; gap: 0; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 2px solid var(--border); }
+.tab-btn {
+  padding: 8px 18px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  margin-bottom: -2px;
+  font-size: 13px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-weight: 500;
+  transition: all .15s;
+}
+.tab-btn:hover { color: var(--teal); background: transparent; }
+.tab-btn.active { color: var(--teal); border-bottom-color: var(--teal); background: transparent; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* vs comparison */
+.vs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+.vs-good { border-left: 3px solid var(--teal-mid); border-radius: 0 var(--radius) var(--radius) 0; padding: 9px 12px; background: var(--teal-light); font-size: 13px; color: var(--ink); line-height: 1.5; }
+.vs-bad { border-left: 3px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; padding: 9px 12px; background: var(--red-light); font-size: 13px; color: var(--ink); line-height: 1.5; }
+.vs-label { font-size: 11px; font-weight: 600; margin-bottom: 4px; font-family: var(--font-body); }
+
+/* ── PAGE: DASHBOARD ── */
+.welcome-banner {
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-mid) 100%);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.welcome-banner::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.welcome-banner h2 {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -.4px;
+  margin-bottom: 6px;
+}
+.welcome-banner p { color: rgba(255,255,255,.75); font-size: 13px; }
+
+.module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+.module-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: var(--shadow);
+}
+.module-card:hover { transform: translateY(-2px); border-color: var(--teal-mid); box-shadow: 0 4px 20px rgba(29,158,117,.12); }
+.module-card .mod-icon { font-size: 24px; margin-bottom: 10px; }
+.module-card .mod-name { font-weight: 500; font-size: 13px; color: var(--ink); line-height: 1.3; }
+.module-card .mod-desc { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+/* ── PAGE: TRACKER ── */
+.cat-tracker-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.cat-tracker-row:last-child { border-bottom: none; }
+.cat-info { min-width: 140px; }
+.cat-name-tr { font-size: 13px; font-weight: 500; color: var(--ink); }
+.cat-count { font-size: 11px; color: var(--muted); font-family: var(--font-body); }
+.tracker-actions { display: flex; gap: 6px; align-items: center; }
+.num-input { width: 60px; text-align: center; }
+
+/* ── PAGE: SEO GENERATOR ── */
+.kw-cloud { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 14px; }
+.kw-pill {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: var(--ink2);
+  cursor: pointer;
+  transition: all .15s;
+  font-family: var(--font-mono);
+}
+.kw-pill:hover { background: var(--teal-light); border-color: var(--teal-mid); color: var(--teal); }
+
+.seo-score-bar { height: 4px; border-radius: 2px; background: var(--border); margin: 6px 0; overflow: hidden; }
+.seo-score-fill { height: 100%; border-radius: 2px; transition: width .3s, background .3s; }
+
+/* ── PAGE: PRICING ── */
+.price-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.price-table th { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; font-family: var(--font-mono); }
+.price-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--ink2); }
+.price-table tr:last-child td { border-bottom: none; }
+.price-table .price-val { font-weight: 600; color: var(--ink); font-family: var(--font-mono); }
+.price-table .floor-val { font-size: 11px; color: var(--teal); font-family: var(--font-mono); }
+
+.calc-section { display: flex; flex-direction: column; gap: 10px; }
+.calc-row { display: flex; align-items: center; gap: 12px; }
+.calc-row label { min-width: 180px; font-size: 13px; color: var(--ink2); }
+
+.result-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+
+/* ── PAGE: PIPELINE ── */
+.pipeline-step {
+  display: flex;
+  gap: 14px;
+  padding-bottom: 20px;
+  position: relative;
+}
+.pipeline-step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 34px;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.step-num-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  z-index: 1;
+}
+.step-content { flex: 1; padding-top: 4px; }
+.step-content h4 { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+.step-content p { font-size: 13px; color: var(--ink2); line-height: 1.55; }
+
+/* ── PAGE: LOGISTICA ── */
+.corriere-card-full {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.corriere-card-full.top { border: 2px solid var(--teal-mid); }
+.corriere-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.corriere-name { font-size: 15px; font-weight: 600; color: var(--ink); font-family: var(--font-display); }
+.corriere-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.spec-list { display: flex; flex-direction: column; gap: 0; }
+.spec-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.spec-row:last-child { border-bottom: none; }
+.spec-key { color: var(--muted); }
+.spec-val { font-weight: 500; color: var(--ink); font-family: var(--font-mono); font-size: 12px; }
+
+/* ── PAGE: BUNDLE ── */
+.bundle-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.bundle-table th { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; font-family: var(--font-mono); }
+.bundle-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--ink2); vertical-align: middle; }
+.bundle-table tr:last-child td { border-bottom: none; }
+
+/* neg matrix */
+.neg-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--ink2); line-height: 1.5; }
+.neg-item:last-child { border-bottom: none; }
+.neg-scenario { min-width: 120px; flex-shrink: 0; }
+
+/* ── MISC ── */
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all .15s;
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+.copy-btn:hover { color: var(--teal); border-color: var(--teal-mid); }
+
+.top-recommended { background: var(--teal-light); color: var(--teal); font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; font-family: var(--font-body); }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── TOAST ── */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--surface);
+  color: var(--ink);
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-family: var(--font-body);
+  box-shadow: 0 4px 20px rgba(0,0,0,.12);
+  opacity: 0;
+  transform: translateY(12px);
+  animation: toastIn .3s ease forwards, toastOut .3s ease 2s forwards;
+  pointer-events: auto;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--teal-mid);
+}
+@keyframes toastIn { to { opacity: 1; transform: translateY(0); } }
+@keyframes toastOut { to { opacity: 0; transform: translateY(-8px); } }
+
+/* ── HAMBURGER ── */
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1001;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--teal);
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.3);
+}
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: all .3s;
+}
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  z-index: 999;
+  backdrop-filter: blur(2px);
+}
+.sidebar-overlay.active { display: block; }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  z-index: 998;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.bnav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 4px 6px;
+  font-size: 10px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color .15s;
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+.bnav-item.active { color: var(--teal); }
+.bnav-item:hover { color: var(--teal); }
+.bnav-icon { font-size: 18px; margin-bottom: 2px; display: block; line-height: 1; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+  .bottom-nav { display: flex; }
+  .sidebar {
+    position: fixed;
+    left: -260px;
+    top: 0;
+    z-index: 1000;
+    width: 250px;
+    transition: left .3s ease;
+  }
+  .sidebar.open { left: 0; }
+  .main { padding: 20px 16px; padding-top: 64px; padding-bottom: 72px; }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .module-grid { grid-template-columns: 1fr 1fr; }
+  .vs-row { grid-template-columns: 1fr; }
+  .result-row { grid-template-columns: 1fr; }
+  .page-header h2 { font-size: 22px; }
+  .welcome-banner { padding: 20px; }
+  .welcome-banner h2 { font-size: 20px; }
+  .card { padding: 16px; }
+  .tabs { gap: 0; }
+  .tab-btn { padding: 7px 12px; font-size: 12px; }
+  .calc-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .calc-row label { min-width: auto; }
+  .corriere-header { flex-direction: column; gap: 8px; }
+  .price-table { font-size: 12px; }
+  .price-table th, .price-table td { padding: 6px 8px; }
+  .bundle-table { font-size: 12px; }
+  .bundle-table th, .bundle-table td { padding: 6px 8px; }
+  .toast-container { bottom: 80px; right: 16px; left: 16px; }
+  .cat-tracker-row { flex-direction: column; align-items: stretch; gap: 8px; }
+  .tracker-actions { justify-content: flex-start; }
+}
+@media (max-width: 480px) {
+  .grid-4 { grid-template-columns: 1fr; }
+  .module-grid { grid-template-columns: 1fr; }
+  .stat-card .stat-val { font-size: 22px; }
+}
+
+/* ── iOS / PWA ── */
+* { -webkit-tap-highlight-color: transparent; }
+.sidebar { -webkit-overflow-scrolling: touch; }
+body { overscroll-behavior: none; }
+.app { min-height: 100dvh; }
+
+/* Previene auto-zoom iOS su input (richiede font-size >= 16px) */
+@supports (-webkit-touch-callout: none) {
+  input[type=text], input[type=number], select, textarea { font-size: 16px; }
+}
+
+/* Notch / Dynamic Island — hamburger e main fuori dall'area di sistema */
+.hamburger {
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  left: calc(12px + env(safe-area-inset-left, 0px));
+}
+@media (max-width: 768px) {
+  .sidebar { padding-top: env(safe-area-inset-top, 0px); }
+  .main { padding-top: calc(64px + env(safe-area-inset-top, 0px)); }
+}
+</style>
+</head>
+<body>
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+  <span></span><span></span><span></span>
+</button>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+<div class="toast-container" id="toast-container"></div>
+<div class="app">
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>Vinted Pro</h1>
+    <p>ASSISTENTE COMPLETO</p>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Panoramica</div>
+    <div class="nav-item active" onclick="showPage('dashboard')">
+      <span class="nav-icon">◈</span> Dashboard
+    </div>
+    <div class="nav-section">Strumenti</div>
+    <div class="nav-item" onclick="showPage('tracker')">
+      <span class="nav-icon">◎</span> Tracker catalogo
+    </div>
+    <div class="nav-item" onclick="showPage('seo')">
+      <span class="nav-icon">◉</span> Generatore SEO
+    </div>
+    <div class="nav-item" onclick="showPage('pricing')">
+      <span class="nav-icon">◐</span> Pricing
+    </div>
+    <div class="nav-item" onclick="showPage('pipeline')">
+      <span class="nav-icon">◑</span> Pipeline batch
+    </div>
+    <div class="nav-item" onclick="showPage('logistica')">
+      <span class="nav-icon">◒</span> Logistica
+    </div>
+    <div class="nav-item" onclick="showPage('bundle')">
+      <span class="nav-icon">◓</span> Bundle & sconti
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div style="margin-bottom:10px">v1.0 · uso personale</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <button class="btn" style="background:var(--surface2);border-color:var(--border);color:var(--ink2);font-size:11px;padding:5px 10px;width:100%;justify-content:center" onclick="exportData()">↓ Esporta dati</button>
+      <label style="display:flex;align-items:center;justify-content:center;background:var(--surface2);border:1px solid var(--border);color:var(--ink2);font-size:11px;padding:5px 10px;border-radius:var(--radius);cursor:pointer;font-family:var(--font-body)">
+        ↑ Importa dati
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(this.files[0]);this.value=''">
+      </label>
+    </div>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+<!-- ════════════════════════════════
+     PAGE: DASHBOARD
+════════════════════════════════ -->
+<div id="page-dashboard" class="page active">
+  <div class="welcome-banner">
+    <h2>Benvenuto nel tuo centro operativo Vinted</h2>
+    <p>Tutto ciò che ti serve per trasformare il decluttering famigliare in un catalogo professionale.</p>
+  </div>
+
+  <div style="margin-bottom:16px">
+    <span class="label">Avanzamento complessivo</span>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="progress-track" style="flex:1;height:10px">
+        <div class="progress-fill" id="dash-global-bar" style="width:0%"></div>
+      </div>
+      <span style="font-family:var(--font-mono);font-size:13px;font-weight:500" id="dash-global-pct">0%</span>
+    </div>
+    <div class="grid-4" style="margin-top:14px">
+      <div class="stat-card">
+        <div class="stat-lbl">Pubblicati</div>
+        <div class="stat-val" id="dash-pub">0</div>
+        <div class="stat-sub">annunci attivi</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Da fare</div>
+        <div class="stat-val" id="dash-rem">0</div>
+        <div class="stat-sub">in coda</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Venduti</div>
+        <div class="stat-val" id="dash-vend">0</div>
+        <div class="stat-sub">capi venduti</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Check logistica</div>
+        <div class="stat-val" id="dash-check">0%</div>
+        <div class="stat-sub">checklist completata</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:16px">
+    <span class="label">Moduli</span>
+    <div class="module-grid">
+      <div class="module-card" onclick="showPage('tracker')">
+        <div class="mod-icon">📊</div>
+        <div class="mod-name">Tracker catalogo</div>
+        <div class="mod-desc">Avanzamento per categoria</div>
+      </div>
+      <div class="module-card" onclick="showPage('seo')">
+        <div class="mod-icon">✍️</div>
+        <div class="mod-name">Generatore SEO</div>
+        <div class="mod-desc">Titoli, descrizioni, hashtag</div>
+      </div>
+      <div class="module-card" onclick="showPage('pricing')">
+        <div class="mod-icon">💶</div>
+        <div class="mod-name">Pricing</div>
+        <div class="mod-desc">Griglia prezzi + calcolatore</div>
+      </div>
+      <div class="module-card" onclick="showPage('pipeline')">
+        <div class="mod-icon">🔄</div>
+        <div class="mod-name">Pipeline batch</div>
+        <div class="mod-desc">Flusso operativo + calendario</div>
+      </div>
+      <div class="module-card" onclick="showPage('logistica')">
+        <div class="mod-icon">📦</div>
+        <div class="mod-name">Logistica</div>
+        <div class="mod-desc">Packaging, corrieri, checklist</div>
+      </div>
+      <div class="module-card" onclick="showPage('bundle')">
+        <div class="mod-icon">🎁</div>
+        <div class="mod-name">Bundle & sconti</div>
+        <div class="mod-desc">Strategia e contrattazione</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="label">Regole d'oro — sintesi operativa</span>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <div class="tip" style="margin:0;font-size:12px">📸 <strong>5 foto minime</strong> per capo: full, etichetta, texture, difetti, stile</div>
+      <div class="tip" style="margin:0;font-size:12px">🔎 <strong>Titolo = attributi</strong>: Brand + Tipo + Genere + Taglia + Colore + Stile</div>
+      <div class="tip" style="margin:0;font-size:12px">💰 <strong>Prezzo pubblicato</strong> = prezzo minimo × 1,25</div>
+      <div class="tip" style="margin:0;font-size:12px">📅 <strong>Max 15 annunci/giorno</strong>. Refresh ogni 5-7 giorni modificando 1 keyword</div>
+      <div class="tip" style="margin:0;font-size:12px">⚡ <strong>Risposta entro 2h</strong>: principale fattore di trust su Vinted</div>
+      <div class="tip" style="margin:0;font-size:12px">📦 <strong>Foto del pacco</strong> prima di consegnare al corriere: prova anti-contestazione</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     PAGE: TRACKER
+════════════════════════════════ -->
+<div id="page-tracker" class="page">
+  <div class="page-header">
+    <h2>Tracker catalogo</h2>
+    <p>Monitora l'avanzamento del tuo decluttering per categoria</p>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:14px">
+    <div class="stat-card">
+      <div class="stat-lbl">Totale pubblicati</div>
+      <div class="stat-val" id="tr-tot">0</div>
+      <div class="stat-sub">annunci attivi</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-lbl">Da pubblicare</div>
+      <div class="stat-val" id="tr-rem">0</div>
+      <div class="stat-sub">in coda</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-lbl">Venduti</div>
+      <div class="stat-val" id="tr-vend">0</div>
+      <div class="stat-sub">capi venduti</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-lbl">Completamento</div>
+      <div class="stat-val" id="tr-pct">0%</div>
+      <div class="stat-sub">del catalogo</div>
+    </div>
+  </div>
+  <div class="card card-sm" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+    <div>
+      <div class="stat-lbl" style="margin-bottom:2px">Ricavi stimati</div>
+      <div style="font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--teal);line-height:1" id="tr-rev">0 €</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">prezzi medi: jeans 15 € · maglieria 12 € · scarpe 22 € · capispalla 30 €</div>
+    </div>
+    <span style="font-size:36px">💶</span>
+  </div>
+
+  <div class="card">
+    <span class="label">Categorie</span>
+    <div id="cat-rows" style="margin-top:8px"></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <span class="label">Avanzamento globale</span>
+    <div class="progress-track" style="height:12px;margin-top:8px">
+      <div class="progress-fill" id="tr-global-bar" style="width:0%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-family:var(--font-mono);margin-top:4px">
+      <span>0</span><span id="tr-global-label">0 / 0 capi</span><span id="tr-global-total">0</span>
+    </div>
+  </div>
+
+  <div class="tip tip-amber" style="margin-top:16px">
+    <strong>Regola:</strong> non pubblicare più di 15 annunci nello stesso giorno. Pianifica i batch su 2 settimane per massimizzare la visibilità organica senza cannibalizzare il feed.
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     PAGE: SEO GENERATOR
+════════════════════════════════ -->
+<div id="page-seo" class="page">
+  <div class="page-header">
+    <h2>Generatore SEO</h2>
+    <p>Titoli ottimizzati, descrizioni complete e hashtag mirati per ogni capo</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('seo','formula')">Formula titolo</button>
+    <button class="tab-btn" onclick="switchTab('seo','generatore')">Generatore</button>
+    <button class="tab-btn" onclick="switchTab('seo','keyword')">Keyword library</button>
+    <button class="tab-btn" onclick="switchTab('seo','errori')">Errori comuni</button>
+  </div>
+
+  <div id="seo-formula" class="tab-panel active">
+    <div class="card">
+      <span class="label">Formula universale</span>
+      <div style="background:var(--ink);color:#fff;border-radius:var(--radius);padding:14px 18px;font-family:var(--font-mono);font-size:14px;letter-spacing:.02em;margin:10px 0">
+        [Brand] + [Tipo capo] + [Genere] + [Taglia] + [Colore/Materiale] + [Keyword estetica]
+      </div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.55">Vinted indicizza le prime ~60 caratteri. Metti le keyword più importanti all'inizio. Il titolo non è una frase: è una lista di attributi di ricerca.</p>
+    </div>
+    <div style="margin-top:16px">
+      <span class="label">Confronto — buono vs pessimo</span>
+      <div class="vs-row">
+        <div>
+          <div class="vs-label" style="color:var(--teal)">✓ Titolo ottimizzato</div>
+          <div class="vs-good">Zara maglione uomo taglia L lana cammello oversize</div>
+        </div>
+        <div>
+          <div class="vs-label" style="color:var(--red)">✗ Da evitare</div>
+          <div class="vs-bad">Maglione carino comodo usato poche volte ottimo</div>
+        </div>
+      </div>
+      <div class="vs-row">
+        <div><div class="vs-good">Nike Air Force 1 donna 38 bianco pelle ottime condizioni</div></div>
+        <div><div class="vs-bad">Scarpe Nike bellissime numero 38 quasi nuove vendo</div></div>
+      </div>
+      <div class="vs-row">
+        <div><div class="vs-good">Mango vestito midi donna S floreale viscosa estate Y2K</div></div>
+        <div><div class="vs-bad">Vestito estivo leggero fresco perfetto vacanze bellissimo</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="seo-generatore" class="tab-panel">
+    <div class="grid-2" style="gap:20px">
+      <div>
+        <span class="label">Parametri capo</span>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Categoria</div>
+            <select id="sg-cat" onchange="renderSEO()">
+              <option value="jeans">Jeans & pantaloni</option>
+              <option value="maglieria">Maglieria & top</option>
+              <option value="scarpe">Scarpe & sneaker</option>
+              <option value="capispalla">Capispalla</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Brand</div>
+            <input type="text" id="sg-brand" placeholder="es. Zara, Levi's, Nike..." oninput="renderSEO()">
+          </div>
+          <div class="grid-2" style="gap:8px">
+            <div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Genere</div>
+              <select id="sg-genere" onchange="renderSEO()">
+                <option value="uomo">Uomo</option>
+                <option value="donna">Donna</option>
+                <option value="unisex">Unisex</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Taglia</div>
+              <input type="text" id="sg-taglia" placeholder="M / 42 / 38..." oninput="renderSEO()">
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Colore o materiale</div>
+            <input type="text" id="sg-colore" placeholder="es. nero lana, bianco pelle..." oninput="renderSEO()">
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Keyword estetica (opz.)</div>
+            <input type="text" id="sg-stile" placeholder="es. oversize, Y2K, vintage..." oninput="renderSEO()">
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Condizione</div>
+            <select id="sg-cond" onchange="renderSEO()">
+              <option value="mai indossato, con cartellino ancora attaccato">Mai indossato + cartellino</option>
+              <option value="ottime condizioni, indossato pochissime volte" selected>Ottima</option>
+              <option value="buone condizioni con minimi segni d'uso">Buona</option>
+              <option value="condizioni discrete, presenta [specificare difetto]">Discreta – specifica difetto</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Misure (opz.)</div>
+            <input type="text" id="sg-misure" placeholder="es. petto 52cm, lunghezza 70cm" oninput="renderSEO()">
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="label">Output generato</span>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <div style="font-size:11px;color:var(--muted)">Titolo</div>
+              <button class="copy-btn" onclick="copyText('sg-out-titolo')">copia</button>
+            </div>
+            <div class="output-box" id="sg-out-titolo">Compila i campi...</div>
+            <div class="seo-score-bar"><div class="seo-score-fill" id="sg-score-fill" style="width:0%"></div></div>
+            <div style="font-size:11px;color:var(--muted);font-family:var(--font-mono)" id="sg-score-txt">SEO 0%</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <div style="font-size:11px;color:var(--muted)">Descrizione</div>
+              <button class="copy-btn" onclick="copyText('sg-out-desc')">copia</button>
+            </div>
+            <div class="output-box" id="sg-out-desc" style="min-height:120px">Compila i campi...</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <div style="font-size:11px;color:var(--muted)">Hashtag</div>
+              <button class="copy-btn" onclick="copyText('sg-out-hash')">copia</button>
+            </div>
+            <div class="output-box" id="sg-out-hash" style="font-size:12px">—</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" onclick="renderSEO()">Aggiorna</button>
+            <button class="btn" onclick="resetSEO()">Prossimo capo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="seo-keyword" class="tab-panel">
+    <div class="card">
+      <span class="label">Materiali — alta conversione</span>
+      <div class="kw-cloud">
+        <span class="kw-pill" onclick="addKw(this)">lana merino</span><span class="kw-pill" onclick="addKw(this)">cashmere</span><span class="kw-pill" onclick="addKw(this)">denim</span><span class="kw-pill" onclick="addKw(this)">viscosa</span><span class="kw-pill" onclick="addKw(this)">cotone 100%</span><span class="kw-pill" onclick="addKw(this)">lino</span><span class="kw-pill" onclick="addKw(this)">pelle vera</span><span class="kw-pill" onclick="addKw(this)">camoscio</span><span class="kw-pill" onclick="addKw(this)">tweed</span><span class="kw-pill" onclick="addKw(this)">seta</span><span class="kw-pill" onclick="addKw(this)">modal</span>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <span class="label">Estetiche / stili — long tail ad alta intenzione</span>
+      <div class="kw-cloud">
+        <span class="kw-pill" onclick="addKw(this)">Y2K</span><span class="kw-pill" onclick="addKw(this)">vintage anni 90</span><span class="kw-pill" onclick="addKw(this)">vintage anni 80</span><span class="kw-pill" onclick="addKw(this)">minimal</span><span class="kw-pill" onclick="addKw(this)">old money</span><span class="kw-pill" onclick="addKw(this)">cottagecore</span><span class="kw-pill" onclick="addKw(this)">streetwear</span><span class="kw-pill" onclick="addKw(this)">dark academia</span><span class="kw-pill" onclick="addKw(this)">preppy</span><span class="kw-pill" onclick="addKw(this)">boho</span><span class="kw-pill" onclick="addKw(this)">grunge</span><span class="kw-pill" onclick="addKw(this)">clean girl</span><span class="kw-pill" onclick="addKw(this)">capsule wardrobe</span><span class="kw-pill" onclick="addKw(this)">oversize</span><span class="kw-pill" onclick="addKw(this)">slim fit</span><span class="kw-pill" onclick="addKw(this)">boyfriend fit</span>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <span class="label">Condizioni — segnali di qualità</span>
+      <div class="kw-cloud">
+        <span class="kw-pill" onclick="addKw(this)">mai indossato</span><span class="kw-pill" onclick="addKw(this)">con cartellino</span><span class="kw-pill" onclick="addKw(this)">come nuovo</span><span class="kw-pill" onclick="addKw(this)">ottime condizioni</span><span class="kw-pill" onclick="addKw(this)">vintage originale</span>
+      </div>
+    </div>
+    <div class="tip tip-amber" style="margin-top:8px">Clicca su una keyword per aggiungerla al campo "Keyword estetica" nel generatore. Poi vai nel tab Generatore per usarla.</div>
+  </div>
+
+  <div id="seo-errori" class="tab-panel">
+    <div class="card">
+      <span class="label">Errori fatali — cosa non fare mai</span>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:8px">
+        <div class="check-item"><span style="color:var(--red);font-size:16px">✗</span><span>Hashtag generici e irrilevanti (#clothes #fashion #sale) — abbassano il ranking</span></div>
+        <div class="check-item"><span style="color:var(--red);font-size:16px">✗</span><span>Brand non corrispondenti al capo (keyword stuffing) — rischio segnalazione e ban</span></div>
+        <div class="check-item"><span style="color:var(--red);font-size:16px">✗</span><span>Titolo in MAIUSCOLO — penalizzato dall'algoritmo Vinted</span></div>
+        <div class="check-item"><span style="color:var(--red);font-size:16px">✗</span><span>Emoji nel titolo — non vengono indicizzate, sprecano caratteri preziosi</span></div>
+        <div class="check-item"><span style="color:var(--red);font-size:16px">✗</span><span>Prezzi nella descrizione ("offerte superiori a X€") — vietato da policy Vinted</span></div>
+        <div class="check-item"><span style="color:var(--red);font-size:16px">✗</span><span>Abbassare il prezzo subito dopo che qualcuno mette il cuore — perdi autorevolezza</span></div>
+        <div class="check-item"><span style="color:var(--red);font-size:16px">✗</span><span>Colori distorti con filtri — contestazioni garantite per "colore non corrispondente"</span></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <span class="label">Trucchi dei Top Seller</span>
+      <div class="check-item"><span style="color:var(--teal-mid);font-size:16px">✓</span><span><strong>Coerenza semantica:</strong> usa le stesse keyword in titolo, descrizione e hashtag — l'algoritmo legge il listing come un documento unico</span></div>
+      <div class="check-item"><span style="color:var(--teal-mid);font-size:16px">✓</span><span><strong>Refresh ogni 5-7 giorni:</strong> modifica una keyword o un hashtag per resettare la data senza pagare i BUMP</span></div>
+      <div class="check-item"><span style="color:var(--teal-mid);font-size:16px">✓</span><span><strong>Specializzazione estetica:</strong> "capi Y2K donna XS-S" batte "vestiti usati" in ogni condizione — meno concorrenza, acquirenti più intenzionati</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     PAGE: PRICING
+════════════════════════════════ -->
+<div id="page-pricing" class="page">
+  <div class="page-header">
+    <h2>Pricing</h2>
+    <p>Griglia prezzi per categoria e calcolatore interattivo</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('pricing','griglia')">Griglia prezzi</button>
+    <button class="tab-btn" onclick="switchTab('pricing','calcolatore')">Calcolatore</button>
+    <button class="tab-btn" onclick="switchTab('pricing','negoziazione')">Negoziazione</button>
+  </div>
+
+  <div id="pricing-griglia" class="tab-panel active">
+    <div class="tip">Regola universale: <strong>prezzo pubblicato = prezzo minimo desiderato × 1,25</strong>. Il margine del 25% assorbe le offerte senza scendere sotto il tuo floor.</div>
+    <div class="grid-2" style="gap:16px;margin-top:16px">
+      <div class="card">
+        <div style="font-size:15px;font-weight:600;color:var(--ink);font-family:var(--font-display);margin-bottom:12px">Jeans & pantaloni</div>
+        <table class="price-table">
+          <thead><tr><th>Brand tier</th><th>Range</th><th>Floor</th></tr></thead>
+          <tbody>
+            <tr><td>Fast fashion (H&M, Bershka)</td><td class="price-val">8–14 €</td><td class="floor-val">6 €</td></tr>
+            <tr><td>Mid-range (Zara, Mango)</td><td class="price-val">14–22 €</td><td class="floor-val">11 €</td></tr>
+            <tr><td>Brand denim (Levi's, Lee)</td><td class="price-val">22–38 €</td><td class="floor-val">17 €</td></tr>
+            <tr><td>Premium (Tommy, Calvin)</td><td class="price-val">35–55 €</td><td class="floor-val">28 €</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div style="font-size:15px;font-weight:600;color:var(--ink);font-family:var(--font-display);margin-bottom:12px">Maglieria & top</div>
+        <table class="price-table">
+          <thead><tr><th>Brand tier</th><th>Range</th><th>Floor</th></tr></thead>
+          <tbody>
+            <tr><td>T-shirt fast fashion</td><td class="price-val">4–8 €</td><td class="floor-val">3 €</td></tr>
+            <tr><td>Felpa / hoodie mid-range</td><td class="price-val">12–20 €</td><td class="floor-val">9 €</td></tr>
+            <tr><td>Maglione lana/misto</td><td class="price-val">18–32 €</td><td class="floor-val">14 €</td></tr>
+            <tr><td>Lana merino / cashmere</td><td class="price-val">35–65 €</td><td class="floor-val">28 €</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div style="font-size:15px;font-weight:600;color:var(--ink);font-family:var(--font-display);margin-bottom:12px">Scarpe & sneaker</div>
+        <table class="price-table">
+          <thead><tr><th>Brand tier</th><th>Range</th><th>Floor</th></tr></thead>
+          <tbody>
+            <tr><td>Fast fashion (Primark, Zara)</td><td class="price-val">6–12 €</td><td class="floor-val">5 €</td></tr>
+            <tr><td>Sneaker mid (Vans, Converse)</td><td class="price-val">18–32 €</td><td class="floor-val">14 €</td></tr>
+            <tr><td>Nike / Adidas lifestyle</td><td class="price-val">28–55 €</td><td class="floor-val">22 €</td></tr>
+            <tr><td>Stivali pelle mid-premium</td><td class="price-val">40–75 €</td><td class="floor-val">32 €</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div style="font-size:15px;font-weight:600;color:var(--ink);font-family:var(--font-display);margin-bottom:12px">Capispalla</div>
+        <table class="price-table">
+          <thead><tr><th>Brand tier</th><th>Range</th><th>Floor</th></tr></thead>
+          <tbody>
+            <tr><td>Giacca leggera fast fashion</td><td class="price-val">12–20 €</td><td class="floor-val">9 €</td></tr>
+            <tr><td>Piumino / giaccone mid</td><td class="price-val">25–45 €</td><td class="floor-val">20 €</td></tr>
+            <tr><td>Cappotto lana mid-range</td><td class="price-val">35–65 €</td><td class="floor-val">28 €</td></tr>
+            <tr><td>Capospalla premium</td><td class="price-val">60–120 €</td><td class="floor-val">48 €</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tip tip-amber" style="margin-top:16px">
+      <strong>Moltiplicatori condizione:</strong> Come nuovo/cartellino → tetto fascia ×1,15 · Ottima → fascia centrale · Buona → fascia bassa · Discreta → floor +2€ (non scendere sotto)
+    </div>
+  </div>
+
+  <div id="pricing-calcolatore" class="tab-panel">
+    <div class="card">
+      <span class="label">Inserisci i dati</span>
+      <div class="calc-section" style="margin-top:12px">
+        <div class="calc-row">
+          <label>Categoria</label>
+          <select id="pc-cat" onchange="calcPrice()" style="max-width:220px">
+            <option value="jeans">Jeans / pantaloni</option>
+            <option value="maglieria">Maglieria / top</option>
+            <option value="scarpe">Scarpe / sneaker</option>
+            <option value="capispalla">Capispalla</option>
+          </select>
+        </div>
+        <div class="calc-row">
+          <label>Prezzo minimo desiderato (€)</label>
+          <input type="range" id="pc-floor" min="3" max="120" step="1" value="20" oninput="calcPrice()" style="max-width:200px">
+          <span style="font-family:var(--font-mono);font-weight:500;min-width:48px" id="pc-floor-out">20 €</span>
+        </div>
+        <div class="calc-row">
+          <label>Condizione capo</label>
+          <select id="pc-cond" onchange="calcPrice()" style="max-width:220px">
+            <option value="1.15">Come nuovo / cartellino</option>
+            <option value="1.0" selected>Ottima</option>
+            <option value="0.9">Buona</option>
+            <option value="0.8">Discreta</option>
+          </select>
+        </div>
+      </div>
+      <div class="result-row" style="margin-top:16px">
+        <div class="stat-card">
+          <div class="stat-lbl">Pubblica a</div>
+          <div class="stat-val" id="pc-pub">—</div>
+          <div class="stat-sub">prezzo annuncio</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Accetta offerta da</div>
+          <div class="stat-val" id="pc-acc">—</div>
+          <div class="stat-sub">soglia minima</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Guadagno netto</div>
+          <div class="stat-val" id="pc-net">—</div>
+          <div class="stat-sub">dopo commissioni 5%+0,70€</div>
+        </div>
+      </div>
+      <div id="pc-tip" class="tip" style="display:none;margin-top:4px"></div>
+    </div>
+  </div>
+
+  <div id="pricing-negoziazione" class="tab-panel">
+    <div class="card">
+      <span class="label">Matrice decisionale offerte</span>
+      <div style="margin-top:8px">
+        <div class="neg-item">
+          <div class="neg-scenario"><span class="badge badge-teal">Offerta ≥ floor</span></div>
+          <span><strong>Accetta immediatamente.</strong> Ogni ora di attesa abbassa la probabilità di chiusura. Non aspettare per "sembrare meno ansioso".</span>
+        </div>
+        <div class="neg-item">
+          <div class="neg-scenario"><span class="badge badge-amber">Offerta –10/15%</span></div>
+          <span><strong>Controproponi a metà strada</strong> tra la tua offerta e il prezzo pubblicato. Aggiungi: "Scendo a X€, spedisco domani." L'urgenza chiude.</span>
+        </div>
+        <div class="neg-item">
+          <div class="neg-scenario"><span class="badge badge-red">Sotto il floor</span></div>
+          <span><strong>Declina, non ignorare.</strong> "Grazie per l'interesse, non riesco a scendere sotto i [floor]€. Se ti interessa un bundle con altri capi posso fare uno sconto combinato." Trasforma il rifiuto in upsell.</span>
+        </div>
+        <div class="neg-item">
+          <div class="neg-scenario"><span class="badge badge-purple">Giacenza 30+ gg</span></div>
+          <span><strong>Abbassa il floor del 10%.</strong> Un capo fermo da 30 giorni vale meno del prezzo iniziale. Meglio incassare 8€ che tenere il capo altri 60 giorni.</span>
+        </div>
+        <div class="neg-item">
+          <div class="neg-scenario"><span class="badge badge-teal">Offerte multiple</span></div>
+          <span><strong>Prima offerta valida chiude.</strong> Non tenere in sospeso per aspettare offerte più alte. Puoi comunicare "ho un'altra proposta in corso" senza pressione eccessiva.</span>
+        </div>
+      </div>
+    </div>
+    <div class="tip tip-red" style="margin-top:12px">
+      <strong>Non fare mai:</strong> abbassare il prezzo dell'annuncio subito dopo che qualcuno lo ha messo tra i preferiti. L'utente riceve notifica e capisce che eri già disposto a cedere — inviti a trattare ulteriormente.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     PAGE: PIPELINE
+════════════════════════════════ -->
+<div id="page-pipeline" class="page">
+  <div class="page-header">
+    <h2>Pipeline batch</h2>
+    <p>Flusso operativo ottimizzato per sessioni da 90 minuti</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('pipeline','flusso')">Flusso operativo</button>
+    <button class="tab-btn" onclick="switchTab('pipeline','foto')">Protocollo foto</button>
+    <button class="tab-btn" onclick="switchTab('pipeline','calendario')">Calendario</button>
+  </div>
+
+  <div id="pipeline-flusso" class="tab-panel active">
+    <div class="tip"><strong>Regola core:</strong> una categoria alla volta, un giorno alla volta. Ogni batch = 1 categoria × 1 sessione da 90 min. Non mescolare mai jeans e capispalla nella stessa sessione.</div>
+    <div style="margin-top:20px">
+      <div class="pipeline-step">
+        <div class="step-num-circle" style="background:var(--teal-light);color:var(--teal)">1</div>
+        <div class="step-content">
+          <h4>Selezione & cernita fisica — 20 min</h4>
+          <p>Raduna tutti i capi della categoria del giorno. Dividi in 3 pile: <span class="badge badge-teal">vendo</span> <span class="badge badge-amber">valuto</span> <span class="badge badge-gray">scarto</span>. Scarta subito i capi con difetti non dichiarabili: non perdere tempo in fotografia su capi non vendibili.</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num-circle" style="background:var(--amber-light);color:var(--amber)">2</div>
+        <div class="step-content">
+          <h4>Setup fotografico unico — 5 min</h4>
+          <p>Prepara sfondo + luce UNA volta sola per tutta la sessione. Non spostare niente tra un capo e l'altro. Usa il protocollo foto nel tab accanto. Annota su carta: brand, taglia, colore, difetti di ogni capo nell'ordine fotografato.</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num-circle" style="background:var(--purple-light);color:var(--purple)">3</div>
+        <div class="step-content">
+          <h4>Fotografia in serie — 30 min</h4>
+          <p>Fotografa tutti i capi consecutivamente. <strong>Non pubblicare ancora.</strong> Prima fai tutte le foto, poi passi al copywriting. Cambio modalità cognitiva = +40% efficienza. Target: 8–12 capi per sessione.</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num-circle" style="background:var(--purple-light);color:var(--purple)">4</div>
+        <div class="step-content">
+          <h4>Copywriting batch con generatore — 25 min</h4>
+          <p>Vai nel modulo Generatore SEO e compila i campi variabili per ogni capo. Il titolo e la struttura della descrizione sono già pronti. Media: 2–3 minuti per annuncio.</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num-circle" style="background:var(--teal-light);color:var(--teal)">5</div>
+        <div class="step-content">
+          <h4>Pubblicazione & aggiornamento tracker — 10 min</h4>
+          <p>Pubblica tutti gli annunci del batch. Aggiorna il Tracker catalogo. Non pubblicare più di 15 annunci nello stesso giorno: l'algoritmo li distribuisce male e si cannibalizzano.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pipeline-foto" class="tab-panel">
+    <div class="tip"><strong>Regola d'oro:</strong> un solo sfondo per tutta la collezione. Cambiare sfondo per ogni capo = profilo caotico. Scegli UNO e usalo sempre.</div>
+    <div class="grid-2" style="margin-top:16px;gap:16px">
+      <div class="card">
+        <span class="label">Le 5 foto obbligatorie per capo</span>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink2)">
+            <span style="background:var(--ink);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;font-family:var(--font-mono)">1</span>
+            <span><strong>Full flat</strong> — capo intero aperto, visione completa, inquadratura dall'alto (90°)</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink2)">
+            <span style="background:var(--ink);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;font-family:var(--font-mono)">2</span>
+            <span><strong>Etichetta brand + taglia</strong> — close-up nitido, testo leggibile</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink2)">
+            <span style="background:var(--ink);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;font-family:var(--font-mono)">3</span>
+            <span><strong>Texture / materiale</strong> — close-up della composizione del tessuto</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink2)">
+            <span style="background:var(--red-light);color:var(--red);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;font-family:var(--font-mono)">4</span>
+            <span><strong>Difetti</strong> — inquadra senza vergogna ogni imperfezione. Protegge da contestazioni.</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink2)">
+            <span style="background:var(--teal-light);color:var(--teal);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;font-family:var(--font-mono)">5</span>
+            <span><strong>Stile / indossato</strong> — su appendino o indossato. Aumenta il CTR del 30–40%</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <span class="label">5 regole d'oro fotografia</span>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          <div class="tip" style="margin:0;font-size:12px"><strong>Luce naturale laterale</strong> — mai flash. Vicino a una finestra, ore 9–11 o 14–16</div>
+          <div class="tip" style="margin:0;font-size:12px"><strong>Sfondo unico e neutro</strong> — lenzuolo bianco, parquet, moquette beige. Uno solo per tutto</div>
+          <div class="tip" style="margin:0;font-size:12px"><strong>Top-down a 90°</strong> — cuciture dritte, maniche simmetriche, nessuna piega</div>
+          <div class="tip" style="margin:0;font-size:12px"><strong>Zero filtri, zero correzioni colore</strong> — solo modalità automatica del telefono</div>
+          <div class="tip" style="margin:0;font-size:12px"><strong>Carta velina</strong> — avvolgi il capo prima di imballarlo: gesto percepito come "regalo"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pipeline-calendario" class="tab-panel">
+    <div class="tip tip-amber"><strong>Picchi di traffico Vinted Italia:</strong> mercoledì e giovedì 20–22h, sabato mattina 9–12h. Pubblica il pomeriggio del giorno precedente.</div>
+    <div class="card" style="margin-top:12px">
+      <span class="label">Schema 2 settimane — catalogo 80–120 capi</span>
+      <table class="price-table" style="margin-top:10px">
+        <thead><tr><th>Giorno</th><th>Batch</th><th>Annunci</th><th>Focus</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-teal">1</span></td><td>Capispalla</td><td class="price-val">10–12</td><td>Alto valore medio, massima cura foto e misure</td></tr>
+          <tr><td><span class="badge badge-gray">2</span></td><td>Pausa</td><td style="color:var(--muted)">—</td><td>Rispondi messaggi, ottimizza annunci giorno 1</td></tr>
+          <tr><td><span class="badge badge-teal">3</span></td><td>Jeans & pantaloni</td><td class="price-val">10–15</td><td>Alta rotazione: titoli SEO al massimo</td></tr>
+          <tr><td><span class="badge badge-gray">4</span></td><td>Pausa</td><td style="color:var(--muted)">—</td><td>Gestisci offerte, proponi bundle ai cuori</td></tr>
+          <tr><td><span class="badge badge-teal">5</span></td><td>Scarpe & sneaker</td><td class="price-val">8–12</td><td>Taglia visibile sull'etichetta interna</td></tr>
+          <tr><td><span class="badge badge-gray">6–7</span></td><td>Week-end</td><td style="color:var(--muted)">—</td><td>Picco traffico: stai online per rispondere veloce</td></tr>
+          <tr><td><span class="badge badge-amber">8</span></td><td>Maglieria pesante</td><td class="price-val">10–15</td><td>Keyword stagionali autunno/inverno</td></tr>
+          <tr><td><span class="badge badge-gray">9</span></td><td>Pausa</td><td style="color:var(--muted)">—</td><td>Refresh organico: modifica 1 keyword su 5–7 annunci settimana 1</td></tr>
+          <tr><td><span class="badge badge-amber">10</span></td><td>Maglieria leggera & top</td><td class="price-val">10–15</td><td>Crea 2–3 set bundle come listing unici</td></tr>
+          <tr><td><span class="badge badge-gray">11–12</span></td><td>Pausa</td><td style="color:var(--muted)">—</td><td>Abbassa 10% i capi senza visualizzazioni</td></tr>
+          <tr><td><span class="badge badge-purple">13</span></td><td>Residui + bundle</td><td class="price-val">5–10</td><td>Capi "borderline" con prezzo aggressivo</td></tr>
+          <tr><td><span class="badge badge-purple">14</span></td><td>Revisione</td><td style="color:var(--muted)">—</td><td>Analisi venduto vs invenduto, ricalibra prezzi</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     PAGE: LOGISTICA
+════════════════════════════════ -->
+<div id="page-logistica" class="page">
+  <div class="page-header">
+    <h2>Logistica</h2>
+    <p>Packaging professionale a costo zero, corrieri e checklist pre-invio</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('logistica','packaging')">Packaging</button>
+    <button class="tab-btn" onclick="switchTab('logistica','corrieri')">Corrieri</button>
+    <button class="tab-btn" onclick="switchTab('logistica','calc-sped')">Calcolatore</button>
+    <button class="tab-btn" onclick="switchTab('logistica','checklist')">Checklist</button>
+  </div>
+
+  <div id="logistica-packaging" class="tab-panel active">
+    <div class="tip"><strong>Obiettivo:</strong> pacchi che arrivano integri, sembrano professionali, costano 0€. Tieni sempre scorta di materiali di recupero pronti — non improvvisare al momento della spedizione.</div>
+    <div class="grid-2" style="margin-top:16px;gap:14px">
+      <div class="card">
+        <span class="label">Materiali a costo zero</span>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;font-size:13px;color:var(--ink2);line-height:1.55">
+          <div><strong style="color:var(--ink)">Scatole di cartone</strong><br>Supermercato, e-commerce, scarpe. Tieni 5–10 scatole di taglie diverse sempre piatte e pronte. Non buttare mai una scatola integra.</div>
+          <div><strong style="color:var(--ink)">Bustoni di plastica</strong><br>Da lavatrice o sacchetti resistenti per capi leggeri. Pesano meno = risparmio sul peso spedizione.</div>
+          <div><strong style="color:var(--ink)">Carta da giornale / velina</strong><br>Per riempire vuoti e proteggere capi delicati. Mai giornali recenti su capi bianchi: l'inchiostro trasferisce.</div>
+          <div><strong style="color:var(--ink)">Nastro da imballaggio</strong><br>L'unico da comprare (~3€ per 2 rotoli). Sigilla ogni giunzione con 2 strati. Rinforza sempre gli angoli in croce.</div>
+        </div>
+      </div>
+      <div class="card">
+        <span class="label">Tecnica per categoria</span>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;font-size:13px;color:var(--ink2);line-height:1.55">
+          <div><strong style="color:var(--ink)">Maglieria & t-shirt</strong><br>Piega in terzi (metodo negozio). Avvolgi in carta velina: gesto percepito come "regalo", +25-30% recensioni 5 stelle.</div>
+          <div><strong style="color:var(--ink)">Jeans & pantaloni</strong><br>Piega in 4: a metà longitudinalmente, poi in 3 orizzontalmente.</div>
+          <div><strong style="color:var(--ink)">Scarpe</strong><br>Avvolgi ogni scarpa separatamente. Mai due scarpe a contatto diretto.</div>
+          <div><strong style="color:var(--ink)">Capispalla strutturati</strong><br>Scatola rigida obbligatoria. Piega lungo le cuciture. Riempi con carta per mantenere la forma.</div>
+        </div>
+        <div class="tip tip-purple" style="margin-top:10px;font-size:12px">
+          <strong>Tocco pro gratuito:</strong> bigliettino scritto a mano — "Grazie! Spero che ti piaccia. Scrivimi se hai dubbi." Aumenta le recensioni 5 stelle del 25–30%.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="logistica-corrieri" class="tab-panel">
+    <div class="tip"><strong>Regola assoluta:</strong> non spedire mai fuori dalla piattaforma Vinted. Perdi la protezione acquisti e rischi frodi. Rifiuta sempre e segnala.</div>
+    <div style="margin-top:16px">
+      <div style="background:var(--teal-light);color:var(--teal);font-size:11px;padding:4px 12px;border-radius:20px;display:inline-block;font-weight:500;font-family:var(--font-mono);margin-bottom:10px">Scelta primaria consigliata</div>
+      <div class="corriere-card-full top">
+        <div class="corriere-header">
+          <div>
+            <div class="corriere-name">BRT / Bartolini</div>
+            <div class="corriere-sub">Corriere principale integrato Vinted — ritiro a domicilio o punto di consegna</div>
+          </div>
+          <span class="badge badge-teal">Primario</span>
+        </div>
+        <div class="spec-list">
+          <div class="spec-row"><span class="spec-key">Peso max</span><span class="spec-val">30 kg</span></div>
+          <div class="spec-row"><span class="spec-key">Tracking</span><span class="spec-val">Realtime + notifiche auto</span></div>
+          <div class="spec-row"><span class="spec-key">Consegna media</span><span class="spec-val">1–2 giorni lavorativi</span></div>
+          <div class="spec-row"><span class="spec-key">Punto di forza</span><span class="spec-val">Copertura nazionale capillare, integrato nativo</span></div>
+          <div class="spec-row"><span class="spec-key">Punto debole</span><span class="spec-val">Orari ritiro a domicilio non sempre flessibili</span></div>
+        </div>
+      </div>
+      <div class="corriere-card-full" style="margin-top:10px">
+        <div class="corriere-header">
+          <div>
+            <div class="corriere-name">Poste Italiane / SDA</div>
+            <div class="corriere-sub">Drop in qualsiasi ufficio postale — massima accessibilità</div>
+          </div>
+          <span class="badge badge-gray">Alternativa</span>
+        </div>
+        <div class="spec-list">
+          <div class="spec-row"><span class="spec-key">Consegna media</span><span class="spec-val">2–3 giorni lavorativi</span></div>
+          <div class="spec-row"><span class="spec-key">Punto di forza</span><span class="spec-val">Nessun appuntamento, uffici ovunque</span></div>
+          <div class="spec-row"><span class="spec-key">Punto debole</span><span class="spec-val">Tracking meno preciso, code agli sportelli</span></div>
+        </div>
+      </div>
+      <div class="corriere-card-full" style="margin-top:10px">
+        <div class="corriere-header">
+          <div>
+            <div class="corriere-name">InPost / Locker</div>
+            <div class="corriere-sub">Drop in armadietti automatici H24 — ideale per volumi alti</div>
+          </div>
+          <span class="badge badge-amber">Volumi alti</span>
+        </div>
+        <div class="spec-list">
+          <div class="spec-row"><span class="spec-key">Consegna media</span><span class="spec-val">1–2 giorni lavorativi</span></div>
+          <div class="spec-row"><span class="spec-key">Punto di forza</span><span class="spec-val">Deposito 60 secondi, qualsiasi ora. Perfetto per batch</span></div>
+          <div class="spec-row"><span class="spec-key">Punto debole</span><span class="spec-val">Copertura limitata fuori dai grandi centri</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="logistica-calc-sped" class="tab-panel">
+    <div class="card">
+      <span class="label">Calcolatore peso & fascia spedizione</span>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
+        <div class="calc-row">
+          <label>Categoria capo</label>
+          <select id="ls-cat" onchange="calcShip()" style="max-width:220px">
+            <option value="250">T-shirt / top</option>
+            <option value="600">Maglione / felpa</option>
+            <option value="700">Jeans / pantaloni</option>
+            <option value="900">Scarpe (paio)</option>
+            <option value="1100">Giacca / capospalla</option>
+            <option value="900">Bundle 2 capi</option>
+            <option value="1400">Bundle 3+ capi</option>
+          </select>
+        </div>
+        <div class="calc-row">
+          <label>Tipo imballo</label>
+          <select id="ls-imb" onchange="calcShip()" style="max-width:220px">
+            <option value="0">Busta/bustina plastica</option>
+            <option value="600">Scatola piccola (30×20×10cm)</option>
+            <option value="1800">Scatola media (40×30×15cm)</option>
+            <option value="4000">Scatola grande (50×40×20cm)</option>
+          </select>
+        </div>
+        <div class="calc-row">
+          <label>Peso reale stimato</label>
+          <input type="range" id="ls-peso" min="100" max="3000" step="50" value="400" oninput="calcShip()" style="max-width:180px">
+          <span style="font-family:var(--font-mono);font-weight:500;min-width:55px" id="ls-peso-out">400 g</span>
+        </div>
+      </div>
+      <div class="result-row" style="margin-top:16px">
+        <div class="stat-card">
+          <div class="stat-lbl">Peso fatturato</div>
+          <div class="stat-val" id="ls-r-peso" style="font-size:18px">—</div>
+          <div class="stat-sub">reale vs volumetrico</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Fascia Vinted</div>
+          <div class="stat-val" id="ls-r-fascia" style="font-size:18px">—</div>
+          <div class="stat-sub">peso massimo fascia</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Costo stimato</div>
+          <div class="stat-val" id="ls-r-costo" style="font-size:18px">—</div>
+          <div class="stat-sub">a carico acquirente</div>
+        </div>
+      </div>
+      <div id="ls-tip" class="tip" style="display:none;margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div id="logistica-checklist" class="tab-panel">
+    <div class="tip" style="margin-bottom:16px">Esegui questa checklist prima di ogni spedizione. Azzera contestazioni e recensioni negative da logistica.</div>
+    <div class="grid-2" style="gap:16px">
+      <div class="card">
+        <span class="label">Prima di imballare</span>
+        <div id="cl-pre" style="margin-top:8px"></div>
+      </div>
+      <div class="card">
+        <span class="label">Durante l'imballaggio</span>
+        <div id="cl-during" style="margin-top:8px"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <span class="label">Prima di consegnare al corriere</span>
+      <div id="cl-post" style="margin-top:8px"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin:14px 0">
+      <div class="progress-track" style="flex:1;height:10px">
+        <div class="progress-fill" id="cl-bar" style="width:0%"></div>
+      </div>
+      <span style="font-family:var(--font-mono);font-weight:500;font-size:13px" id="cl-pct">0 / 0</span>
+    </div>
+    <button class="btn" onclick="resetChecklist()">Reset per nuova spedizione</button>
+    <div class="tip tip-purple" style="margin-top:12px">
+      Dopo la spedizione: invia messaggio all'acquirente con il tracking. "Ho spedito oggi con BRT, tracking: [codice]. Arrivo previsto domani/dopodomani." Riduce i messaggi ansiosi del 70% e aumenta le recensioni positive.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     PAGE: BUNDLE
+════════════════════════════════ -->
+<div id="page-bundle" class="page">
+  <div class="page-header">
+    <h2>Bundle & sconti</h2>
+    <p>Strategia bundle, sconti ottimali e testo pronto per la descrizione</p>
+  </div>
+
+  <div class="tip"><strong>Bundle = arma principale per chi svuota armadi interi.</strong> L'acquirente percepisce risparmio, tu aumenti il valore medio ordine e svuoti più veloce. Con zero BUMP è il tuo principale acceleratore organico.</div>
+
+  <div class="card" style="margin-top:16px">
+    <span class="label">Matrice bundle — sconti ottimali</span>
+    <table class="bundle-table" style="margin-top:10px">
+      <thead><tr><th>Capi in bundle</th><th>Sconto</th><th>Logica psicologica</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-teal">2 capi</span></td><td style="font-weight:600;font-family:var(--font-mono)">–10%</td><td>Primo step, bassa resistenza, alta accettazione</td><td style="font-family:var(--font-mono);font-size:12px">2×8€ → 14€</td></tr>
+        <tr><td><span class="badge badge-teal">3 capi</span></td><td style="font-weight:600;font-family:var(--font-mono)">–15%</td><td>Punto dolce: sconto percepito significativo</td><td style="font-family:var(--font-mono);font-size:12px">3×10€ → 25€</td></tr>
+        <tr><td><span class="badge badge-amber">4–5 capi</span></td><td style="font-weight:600;font-family:var(--font-mono)">–20%</td><td>Svuota categorie intere, spedizione unica</td><td style="font-family:var(--font-mono);font-size:12px">5×8€ → 32€</td></tr>
+        <tr><td><span class="badge badge-purple">6+ capi</span></td><td style="font-weight:600;font-family:var(--font-mono)">–25/30%</td><td>Acquirente "armadio completo"</td><td style="font-family:var(--font-mono);font-size:12px">10 capi → 55–60€</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2" style="margin-top:14px;gap:14px">
+    <div class="card">
+      <span class="label">Calcolatore sconto bundle</span>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
+        <div class="calc-row" style="gap:10px">
+          <label style="min-width:130px">N° capi</label>
+          <input type="number" id="bc-n" min="2" max="20" value="3" oninput="calcBundle()" style="width:70px">
+        </div>
+        <div class="calc-row" style="gap:10px">
+          <label style="min-width:130px">Prezzo medio capo (€)</label>
+          <input type="number" id="bc-avg" min="1" max="200" value="15" oninput="calcBundle()" style="width:70px">
+        </div>
+        <div style="background:var(--surface2);border-radius:var(--radius);padding:12px 14px;margin-top:4px">
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+            <span style="color:var(--muted)">Totale senza sconto</span>
+            <span style="font-family:var(--font-mono);font-weight:500" id="bc-tot">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+            <span style="color:var(--muted)">Sconto applicato</span>
+            <span style="font-family:var(--font-mono);font-weight:500;color:var(--teal)" id="bc-disc">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:15px;font-weight:600">
+            <span>Prezzo bundle</span>
+            <span style="font-family:var(--font-mono);color:var(--teal)" id="bc-final">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <span class="label">Testo bundle pronto — copia in descrizione</span>
+      <div class="output-box" style="margin-top:8px;font-size:12px">Faccio bundle con tutti i capi del profilo — scrivi prima di acquistare per uno sconto combinato. Per 2 capi –10%, per 3+ capi –15%. Spedizione unica, risparmio anche sulle spese.</div>
+      <button class="copy-btn" style="margin-top:8px" onclick="copyText('bundle-tpl')">copia testo</button>
+      <div id="bundle-tpl" style="display:none">Faccio bundle con tutti i capi del profilo — scrivi prima di acquistare per uno sconto combinato. Per 2 capi –10%, per 3+ capi –15%. Spedizione unica, risparmio anche sulle spese.</div>
+      <div class="tip tip-amber" style="margin-top:10px;font-size:12px">
+        <strong>Tecnica avanzata:</strong> crea listing "set già pronti" (es. "Kit 3 maglie uomo L estate"). Converte meglio dei bundle composti dall'acquirente: l'offerta è già definita, zero attrito cognitivo.
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<nav class="bottom-nav" id="bottom-nav">
+  <div class="bnav-item active" onclick="showPage('dashboard')">
+    <span class="bnav-icon">◈</span><span>Home</span>
+  </div>
+  <div class="bnav-item" onclick="showPage('tracker')">
+    <span class="bnav-icon">◎</span><span>Tracker</span>
+  </div>
+  <div class="bnav-item" onclick="showPage('seo')">
+    <span class="bnav-icon">◉</span><span>SEO</span>
+  </div>
+  <div class="bnav-item" onclick="showPage('pricing')">
+    <span class="bnav-icon">◐</span><span>Prezzi</span>
+  </div>
+  <div class="bnav-item" onclick="showPage('logistica')">
+    <span class="bnav-icon">◒</span><span>Spediz.</span>
+  </div>
+  <div class="bnav-item" onclick="showPage('bundle')">
+    <span class="bnav-icon">◓</span><span>Bundle</span>
+  </div>
+</nav>
+
+<script>
+// ── STATE ──
+const state = {
+  tracker: { jeans: { pub: 0, tot: 0, vend: 0 }, magl: { pub: 0, tot: 0, vend: 0 }, scarpe: { pub: 0, tot: 0, vend: 0 }, capi: { pub: 0, tot: 0, vend: 0 } },
+  checklist: {}
+};
+
+// ── PERSISTENCE ──
+const LS = { tracker: 'vp_tracker', check: 'vp_check', seo: 'vp_seo', calc: 'vp_calc' };
+
+function lsSave(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} }
+function lsLoad(key) { try { const s = localStorage.getItem(key); return s ? JSON.parse(s) : null; } catch(e) { return null; } }
+
+function saveTracker() { lsSave(LS.tracker, state.tracker); }
+function loadTracker() {
+  const s = lsLoad(LS.tracker);
+  if (!s) return;
+  Object.keys(state.tracker).forEach(k => { if (s[k]) Object.assign(state.tracker[k], s[k]); });
+}
+
+function saveChecklist() { lsSave(LS.check, state.checklist); }
+function loadChecklist() { return lsLoad(LS.check) || {}; }
+
+function saveSEO() {
+  const ids = ['sg-cat','sg-brand','sg-genere','sg-taglia','sg-colore','sg-stile','sg-cond','sg-misure'];
+  const vals = {};
+  ids.forEach(id => { const el = document.getElementById(id); if (el) vals[id] = el.value; });
+  lsSave(LS.seo, vals);
+}
+function loadSEO() {
+  const vals = lsLoad(LS.seo);
+  if (!vals) return;
+  Object.keys(vals).forEach(id => { const el = document.getElementById(id); if (el) el.value = vals[id]; });
+}
+
+function saveCalc() {
+  const ids = ['pc-floor','pc-cond','pc-cat','ls-cat','ls-imb','ls-peso','bc-n','bc-avg'];
+  const vals = {};
+  ids.forEach(id => { const el = document.getElementById(id); if (el) vals[id] = el.value; });
+  lsSave(LS.calc, vals);
+}
+function loadCalc() {
+  const vals = lsLoad(LS.calc);
+  if (!vals) return;
+  Object.keys(vals).forEach(id => { const el = document.getElementById(id); if (el) el.value = vals[id]; });
+}
+
+// ── SIDEBAR TOGGLE ──
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const btn = document.getElementById('hamburger');
+  const overlay = document.getElementById('sidebar-overlay');
+  sidebar.classList.toggle('open');
+  if (btn) btn.classList.toggle('active');
+  if (overlay) overlay.classList.toggle('active');
+}
+
+// ── NAV ──
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const page = document.getElementById('page-' + id);
+  if (!page) return;
+  page.classList.add('active');
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(n => { if (n.getAttribute('onclick') && n.getAttribute('onclick').includes(id)) n.classList.add('active'); });
+  document.querySelectorAll('.bnav-item').forEach(n => {
+    n.classList.toggle('active', n.getAttribute('onclick') && n.getAttribute('onclick').includes(id));
+  });
+  if (id === 'tracker') renderTracker();
+  if (id === 'dashboard') updateDashboard();
+}
+
+// ── TAB SYSTEM ──
+function switchTab(ns, id) {
+  document.querySelectorAll('#page-' + ns + ' .tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', b.getAttribute('onclick').includes("'" + id + "'"));
+  });
+  document.querySelectorAll('#page-' + ns + ' .tab-panel').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById(ns + '-' + id);
+  if (el) el.classList.add('active');
+}
+
+// ── TRACKER ──
+const catDefs = [
+  { key: 'jeans', label: 'Jeans & pantaloni', color: '#1D9E75', avgPrice: 15 },
+  { key: 'magl', label: 'Maglieria & top', color: '#b85c00', avgPrice: 12 },
+  { key: 'scarpe', label: 'Scarpe & sneaker', color: '#4a3b8c', avgPrice: 22 },
+  { key: 'capi', label: 'Capispalla', color: '#3B6D11', avgPrice: 30 }
+];
+
+function renderTracker() {
+  const container = document.getElementById('cat-rows');
+  if (!container) return;
+  container.innerHTML = '';
+  catDefs.forEach(cat => {
+    const d = state.tracker[cat.key];
+    const pct = d.tot > 0 ? Math.round((d.pub / d.tot) * 100) : 0;
+    const row = document.createElement('div');
+    row.className = 'cat-tracker-row';
+    row.innerHTML = `
+      <div class="cat-info">
+        <div class="cat-name-tr">${cat.label}</div>
+        <div class="cat-count" id="ct-count-${cat.key}">${d.pub} / ${d.tot} pubblicati</div>
+        <div style="font-size:11px;color:var(--teal);font-family:var(--font-mono);margin-top:1px" id="ct-vend-${cat.key}">${d.vend} venduti · ~${d.vend * cat.avgPrice} €</div>
+      </div>
+      <div style="flex:1">
+        <div class="progress-track">
+          <div class="progress-fill" id="ct-bar-${cat.key}" style="width:${pct}%;background:${cat.color}"></div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);font-family:var(--font-mono);margin-top:2px" id="ct-pct-${cat.key}">${pct}%</div>
+      </div>
+      <div class="tracker-actions">
+        <button class="btn" style="padding:4px 8px;font-size:12px" onclick="decPub('${cat.key}')" title="Riduci pubblicati">−</button>
+        <button class="btn btn-primary" style="padding:4px 10px;font-size:12px" onclick="addPub('${cat.key}')">+ Pub</button>
+        <button class="btn" style="padding:4px 10px;font-size:12px;color:var(--teal);border-color:var(--teal-mid)" onclick="addVend('${cat.key}')">+ Vend</button>
+        <input type="number" class="num-input" min="0" max="500" value="${d.tot}" placeholder="Tot" oninput="setTot('${cat.key}', this.value)" style="width:58px;font-size:12px">
+      </div>
+    `;
+    container.appendChild(row);
+  });
+  updateTrackerStats();
+}
+
+function addPub(key) {
+  const d = state.tracker[key];
+  if (d.pub < d.tot) { d.pub++; updateCatBar(key); updateTrackerStats(); updateDashboard(); saveTracker(); }
+}
+function decPub(key) {
+  const d = state.tracker[key];
+  if (d.pub > 0) {
+    d.pub--;
+    if (d.vend > d.pub) d.vend = d.pub;
+    updateCatBar(key); updateTrackerStats(); updateDashboard(); saveTracker();
+  }
+}
+function addVend(key) {
+  const d = state.tracker[key];
+  if (d.vend < d.pub) { d.vend++; updateCatBar(key); updateTrackerStats(); updateDashboard(); saveTracker(); }
+  else showToast('Tutti i pubblicati risultano già venduti');
+}
+
+function setTot(key, val) {
+  state.tracker[key].tot = parseInt(val) || 0;
+  updateCatBar(key); updateTrackerStats(); updateDashboard(); saveTracker();
+}
+
+function updateCatBar(key) {
+  const d = state.tracker[key];
+  const cat = catDefs.find(c => c.key === key);
+  const pct = d.tot > 0 ? Math.round((d.pub / d.tot) * 100) : 0;
+  const bar = document.getElementById('ct-bar-' + key);
+  const cnt = document.getElementById('ct-count-' + key);
+  const pctEl = document.getElementById('ct-pct-' + key);
+  const vendEl = document.getElementById('ct-vend-' + key);
+  if (bar) bar.style.width = pct + '%';
+  if (cnt) cnt.textContent = d.pub + ' / ' + d.tot + ' pubblicati';
+  if (pctEl) pctEl.textContent = pct + '%';
+  if (vendEl) vendEl.textContent = d.vend + ' venduti · ~' + (d.vend * cat.avgPrice) + ' €';
+}
+
+function updateTrackerStats() {
+  let totPub = 0, totTot = 0, totVend = 0, totRev = 0;
+  catDefs.forEach(c => {
+    const d = state.tracker[c.key];
+    totPub += d.pub; totTot += d.tot;
+    totVend += d.vend; totRev += d.vend * c.avgPrice;
+  });
+  const pct = totTot > 0 ? Math.round((totPub / totTot) * 100) : 0;
+  setText('tr-tot', totPub);
+  setText('tr-rem', Math.max(0, totTot - totPub));
+  setText('tr-vend', totVend);
+  setText('tr-rev', totRev + ' €');
+  setText('tr-pct', pct + '%');
+  setText('tr-global-label', totPub + ' / ' + totTot + ' capi');
+  setText('tr-global-total', totTot);
+  const bar = document.getElementById('tr-global-bar');
+  if (bar) bar.style.width = pct + '%';
+}
+
+// ── DASHBOARD ──
+function updateDashboard() {
+  let totPub = 0, totTot = 0;
+  catDefs.forEach(c => { totPub += state.tracker[c.key].pub; totTot += state.tracker[c.key].tot; });
+  const pct = totTot > 0 ? Math.round((totPub / totTot) * 100) : 0;
+  setText('dash-pub', totPub);
+  setText('dash-rem', Math.max(0, totTot - totPub));
+  let totVend = 0;
+  catDefs.forEach(c => { totVend += state.tracker[c.key].vend; });
+  setText('dash-vend', totVend);
+  const bar = document.getElementById('dash-global-bar');
+  if (bar) bar.style.width = pct + '%';
+  setText('dash-global-pct', pct + '%');
+  // checklist
+  const keys = Object.keys(state.checklist);
+  const done = keys.filter(k => state.checklist[k]).length;
+  const checkPct = keys.length > 0 ? Math.round((done / keys.length) * 100) : 0;
+  setText('dash-check', checkPct + '%');
+}
+
+// ── SEO GENERATOR ──
+const seoTemplates = {
+  jeans: {
+    titoloFn: (b,g,t,c,s) => [b,'jeans',g,t?'taglia '+t:'',c,s].filter(Boolean).join(' '),
+    descFn: (b,g,t,c,s,cond,mis) => `${b} jeans${t?' taglia '+t:''} ${g} — ${c||'colore non specificato'}.
+Condizione: ${cond}.${mis?'\nMisure: '+mis+'.':''}${s?'\nStile: '+s+'.':''}
+
+Spedizione entro 24h, imballaggio curato.
+Bundle disponibile con altri capi del profilo — scrivi per sconto combinato.`,
+    hash: (b,s) => `#jeans #denim #pantaloni #modauomo #modadonna #secondhand #preloved #vintage${b?' #'+b.toLowerCase().replace(/\s/g,''):''}${s?' #'+s.replace(/\s/g,'').toLowerCase():''} #capsulewardrobe #sustainablefashion`
+  },
+  maglieria: {
+    titoloFn: (b,g,t,c,s) => [b,'maglione',g,t?'taglia '+t:'',c,s].filter(Boolean).join(' '),
+    descFn: (b,g,t,c,s,cond,mis) => `${b} maglione${t?' taglia '+t:''} ${g} — ${c||'colore non specificato'}.
+Condizione: ${cond}.${mis?'\nMisure: '+mis+'.':''}${s?'\nStile: '+s+'.':''}
+
+Spedizione entro 24h, imballaggio curato.
+Bundle disponibile — scrivi per sconto combinato.`,
+    hash: (b,s) => `#maglieria #maglione #knitwear #maglia #modadonna #modauomo #autunno #inverno${b?' #'+b.toLowerCase().replace(/\s/g,''):''}${s?' #'+s.replace(/\s/g,'').toLowerCase():''} #preloved #secondhand`
+  },
+  scarpe: {
+    titoloFn: (b,g,t,c,s) => [b,s||'scarpe',g,t?'n.'+t:'',c].filter(Boolean).join(' '),
+    descFn: (b,g,t,c,s,cond,mis) => `${b} ${s||'scarpe'}${t?' numero '+t:''} ${g} — ${c||'colore non specificato'}.
+Condizione: ${cond}. Suola e tomaia in ottime condizioni.${mis?'\nMisure soletta: '+mis+'.':''}
+
+Spedizione in scatola originale se disponibile.
+Bundle con altri capi su richiesta.`,
+    hash: (b,s) => `#scarpe #shoes #sneakers #footwear #scarpedonna #scarpeuomo${b?' #'+b.toLowerCase().replace(/\s/g,''):''}${s?' #'+s.replace(/\s/g,'').toLowerCase():''} #preloved #secondhand #sneakerhead`
+  },
+  capispalla: {
+    titoloFn: (b,g,t,c,s) => [b,'cappotto',g,t?'taglia '+t:'',c,s].filter(Boolean).join(' '),
+    descFn: (b,g,t,c,s,cond,mis) => `${b} capospalla${t?' taglia '+t:''} ${g} — ${c||'colore non specificato'}.
+Condizione: ${cond}.${mis?'\nMisure: '+mis+'.':''}${s?'\nStile: '+s+'.':''}
+
+Spedizione entro 24h, imballo rinforzato per proteggere la forma.
+Bundle disponibile con altri capi del profilo.`,
+    hash: (b,s) => `#cappotto #giacca #capospalla #giaccone #outerwear #modauomo #modadonna${b?' #'+b.toLowerCase().replace(/\s/g,''):''}${s?' #'+s.replace(/\s/g,'').toLowerCase():''} #preloved #secondhand #autunno`
+  }
+};
+
+function renderSEO() {
+  const cat = document.getElementById('sg-cat').value;
+  const b = v('sg-brand'); const g = v('sg-genere'); const t = v('sg-taglia');
+  const c = v('sg-colore'); const s = v('sg-stile');
+  const cond = document.getElementById('sg-cond').value;
+  const mis = v('sg-misure');
+  const tmpl = seoTemplates[cat];
+  const titolo = tmpl.titoloFn(b, g, t, c, s) || 'Compila i campi...';
+  setText('sg-out-titolo', titolo);
+  setText('sg-out-desc', b || t || c ? tmpl.descFn(b, g, t, c, s, cond, mis) : 'Compila i campi...');
+  setText('sg-out-hash', b || cat ? tmpl.hash(b, s) : '—');
+  const score = Math.min(100, Math.round((!!b*25)+(!!t*20)+(!!c*20)+(!!s*15)+(titolo.length>=35?20:titolo.length>=20?10:0)));
+  const fill = document.getElementById('sg-score-fill');
+  if (fill) { fill.style.width = score + '%'; fill.style.background = score >= 75 ? '#1D9E75' : score >= 50 ? '#b85c00' : '#c0392b'; }
+  setText('sg-score-txt', 'SEO ' + score + '%');
+  saveSEO();
+}
+
+function resetSEO() {
+  ['sg-brand','sg-taglia','sg-colore','sg-stile','sg-misure'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  document.getElementById('sg-cond').selectedIndex = 1;
+  renderSEO();
+}
+
+function addKw(el) {
+  const kw = el.textContent;
+  const stileEl = document.getElementById('sg-stile');
+  if (stileEl) { stileEl.value = kw; renderSEO(); showPage('seo'); switchTab('seo','generatore'); }
+}
+
+// ── PRICING CALC ──
+function calcPrice() {
+  const floor = parseInt(document.getElementById('pc-floor').value);
+  const cond = parseFloat(document.getElementById('pc-cond').value);
+  setText('pc-floor-out', floor + ' €');
+  const pub = Math.round(floor * 1.25 * cond);
+  const comm = Math.round((pub * 0.05 + 0.70) * 100) / 100;
+  const net = Math.round((pub - comm) * 100) / 100;
+  setText('pc-pub', pub + ' €');
+  setText('pc-acc', floor + ' €');
+  setText('pc-net', net.toFixed(2) + ' €');
+  const margin = Math.round(((pub - floor) / floor) * 100);
+  const tip = document.getElementById('pc-tip');
+  if (tip) {
+    tip.style.display = 'block';
+    tip.textContent = margin >= 30 ? 'Margine '+margin+'% — ottimo. Hai spazio per offerte aggressive.' : margin >= 20 ? 'Margine '+margin+'% — buono. Puoi accettare una controproposta.' : 'Margine '+margin+'% — stretto. Considera di alzare leggermente il prezzo pubblicato.';
+  }
+  saveCalc();
+}
+
+// ── LOGISTICA CALC ──
+function calcShip() {
+  const pesoReale = parseInt(document.getElementById('ls-peso').value);
+  const vol = parseInt(document.getElementById('ls-imb').value);
+  setText('ls-peso-out', pesoReale + ' g');
+  const pesoFatt = pesoReale + vol;
+  const pesoKg = pesoFatt / 1000;
+  let fascia, costo;
+  if (pesoKg <= 1) { fascia = '≤ 1 kg'; costo = '~2,99 €'; }
+  else if (pesoKg <= 5) { fascia = '≤ 5 kg'; costo = '~4,49 €'; }
+  else if (pesoKg <= 10) { fascia = '≤ 10 kg'; costo = '~5,99 €'; }
+  else { fascia = '≤ 30 kg'; costo = '~7,99 €'; }
+  setText('ls-r-peso', pesoFatt >= 1000 ? (pesoFatt/1000).toFixed(1)+' kg' : pesoFatt+' g');
+  setText('ls-r-fascia', fascia);
+  setText('ls-r-costo', costo);
+  const tip = document.getElementById('ls-tip');
+  if (tip) {
+    tip.style.display = 'block';
+    tip.textContent = 'Peso spedito: ' + (pesoFatt >= 1000 ? (pesoFatt/1000).toFixed(2)+' kg' : pesoFatt+' g') + ' (capo + imballo).';
+  }
+  saveCalc();
+}
+
+// ── CHECKLIST ──
+const checkData = {
+  pre: ['Il capo è pulito e in condizioni dichiarate nell\'annuncio','Ho confrontato il capo fisico con le foto pubblicate: nessuna discrepanza','Ho il materiale di imballaggio pronto (scatola/busta, nastro, carta)','Ho verificato il peso stimato per scegliere la fascia corretta'],
+  during: ['Ho avvolto il capo in carta velina o carta bianca neutra','Ho riempito i vuoti per evitare movimenti durante il trasporto','Ho rinforzato gli angoli della scatola con nastro doppio','Ho inserito il bigliettino di ringraziamento','Ho sigillato ogni apertura con almeno 2 strati di nastro'],
+  post: ['Ho stampato o mostrato il QR code generato da Vinted','Il pacco riporta il numero ordine Vinted visibile','Ho verificato che il peso non superi la fascia acquistata','Ho fotografato il pacco chiuso (prova anti-contestazione)','Ho inviato messaggio all\'acquirente con il tracking dopo la consegna']
+};
+
+function buildChecklist() {
+  const saved = loadChecklist();
+  ['pre','during','post'].forEach(phase => {
+    const el = document.getElementById('cl-' + phase);
+    if (!el) return;
+    el.innerHTML = '';
+    checkData[phase].forEach((item, i) => {
+      const key = phase + i;
+      state.checklist[key] = saved[key] || false;
+      const div = document.createElement('div');
+      div.className = 'check-item';
+      div.id = 'ci-' + key;
+      if (state.checklist[key]) div.classList.add('done');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.id = 'cb-' + key;
+      cb.checked = state.checklist[key];
+      cb.onchange = () => { state.checklist[key] = cb.checked; div.classList.toggle('done', cb.checked); updateCheckBar(); updateDashboard(); saveChecklist(); };
+      const lbl = document.createElement('label');
+      lbl.htmlFor = 'cb-' + key; lbl.textContent = item;
+      div.appendChild(cb); div.appendChild(lbl);
+      el.appendChild(div);
+    });
+  });
+  updateCheckBar();
+}
+
+function updateCheckBar() {
+  const keys = Object.keys(state.checklist);
+  const done = keys.filter(k => state.checklist[k]).length;
+  const pct = keys.length > 0 ? Math.round((done / keys.length) * 100) : 0;
+  const bar = document.getElementById('cl-bar');
+  if (bar) bar.style.width = pct + '%';
+  setText('cl-pct', done + ' / ' + keys.length);
+}
+
+function resetChecklist() {
+  Object.keys(state.checklist).forEach(k => {
+    state.checklist[k] = false;
+    const cb = document.getElementById('cb-' + k);
+    const ci = document.getElementById('ci-' + k);
+    if (cb) cb.checked = false;
+    if (ci) ci.classList.remove('done');
+  });
+  updateCheckBar(); updateDashboard(); saveChecklist();
+}
+
+// ── BUNDLE CALC ──
+function calcBundle() {
+  const n = parseInt(document.getElementById('bc-n').value) || 0;
+  const avg = parseFloat(document.getElementById('bc-avg').value) || 0;
+  if (n < 2 || avg <= 0) {
+    ['bc-tot','bc-disc','bc-final'].forEach(id => setText(id, '—'));
+    return;
+  }
+  const tot = n * avg;
+  let disc;
+  if (n >= 6) disc = 0.275;
+  else if (n >= 4) disc = 0.20;
+  else if (n === 3) disc = 0.15;
+  else disc = 0.10;
+  const final = Math.round(tot * (1 - disc) * 10) / 10;
+  const discAmt = Math.round((tot - final) * 10) / 10;
+  setText('bc-tot', tot.toFixed(2) + ' €');
+  setText('bc-disc', '–' + discAmt.toFixed(2) + ' € (–' + Math.round(disc*100) + '%)');
+  setText('bc-final', final.toFixed(2) + ' €');
+  saveCalc();
+}
+
+// ── UTILS ──
+function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+function v(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+function showToast(msg) {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 2400);
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); showToast('Copiato negli appunti'); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function copyText(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const text = el.textContent || el.value || '';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('Copiato negli appunti'))
+      .catch(() => fallbackCopy(text));
+  } else { fallbackCopy(text); }
+}
+
+// ── EXPORT / IMPORT ──
+function exportData() {
+  const data = {};
+  const allowed = new Set(Object.values(LS));
+  allowed.forEach(k => { const raw = localStorage.getItem(k); if (raw) { try { data[k] = JSON.parse(raw); } catch(e) {} } });
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url;
+  a.download = 'vinted-pro-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('Dati esportati');
+}
+function importData(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      const allowed = new Set(Object.values(LS));
+      Object.entries(data).forEach(([k, v]) => {
+        if (allowed.has(k)) localStorage.setItem(k, JSON.stringify(v));
+      });
+      showToast('Importazione completata — ricarico...');
+      setTimeout(() => location.reload(), 1200);
+    } catch(err) { showToast('Errore: file non valido'); }
+  };
+  reader.readAsText(file);
+}
+
+// ── SERVICE WORKER ──
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
+
+// ── INIT ──
+loadTracker();
+buildChecklist();
+loadSEO();
+loadCalc();
+renderSEO();
+calcPrice();
+calcShip();
+calcBundle();
+updateDashboard();
+</script>
+</body>
+</html>
